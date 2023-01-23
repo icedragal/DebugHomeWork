@@ -29,6 +29,10 @@ public class IngredientService {
     }
     @PostConstruct
     public void init() {
+        readFromFile();
+    }
+
+    private void readFromFile(){
         try {
             Map<Long, Ingredient> fromFile = objectMapper.readValue(Files.readAllBytes(pathToFile), new TypeReference<>(){});
             ingredients.putAll(fromFile);
@@ -36,7 +40,6 @@ public class IngredientService {
             e.printStackTrace();
         }
     }
-
     private void writeToFile() {
         try {
             byte[] data = objectMapper.writeValueAsBytes(ingredients);
@@ -74,6 +77,7 @@ public class IngredientService {
     public void importData(byte[] data) {
         try {
             Files.write(pathToFile, data);
+            readFromFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
