@@ -104,4 +104,17 @@ public class RecipeController {
             e.printStackTrace();
         }
     }
+
+    @GetMapping("/download")
+    public ResponseEntity<byte[]> download(){
+        byte[] data = recipeService.download();
+        if (data == null){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok()
+                .contentLength(data.length)
+                .contentType(MediaType.TEXT_PLAIN)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"recipes.txt\"")
+                .body(data);
+    }
 }
